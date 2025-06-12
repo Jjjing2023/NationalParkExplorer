@@ -1,6 +1,16 @@
+import java.util.Properties
+
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
+val localProps = Properties()
+val localPropsFile = rootProject.file("local.properties")
+if (localPropsFile.exists()) {
+    localProps.load(localPropsFile.inputStream())
+}
+
 
 android {
     namespace = "edu.northeastern.group2"
@@ -14,6 +24,15 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val npsKey: String = localProps.getProperty("npsApiKey") ?: ""
+
+        buildConfigField(
+            "String",
+            "NPS_API_KEY",
+            "\"$npsKey\""
+        )
+
     }
 
     buildTypes {
@@ -29,6 +48,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        buildConfig = true
+    }
+
 }
 
 dependencies {
