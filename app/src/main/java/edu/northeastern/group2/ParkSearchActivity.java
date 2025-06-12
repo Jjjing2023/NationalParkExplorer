@@ -3,13 +3,14 @@ package edu.northeastern.group2;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 
 public class ParkSearchActivity extends AppCompatActivity {
 
@@ -30,10 +31,11 @@ public class ParkSearchActivity extends AppCompatActivity {
         searchButton.setOnClickListener(v -> {
             String stateCode = stateCodeInput.getText().toString().trim().toUpperCase();
             if (stateCode.isEmpty()) {
-                Toast.makeText(this, "Please enter a state code.", Toast.LENGTH_SHORT).show();
+                Snackbar.make(v, "Please enter a state code.", Snackbar.LENGTH_SHORT).show();
                 return;
             }
-            Toast.makeText(this, "Searching parks in " + stateCode, Toast.LENGTH_SHORT).show();
+
+            Snackbar.make(v, "Searching parks in " + stateCode, Snackbar.LENGTH_SHORT).show();
         });
 
     }
