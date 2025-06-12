@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button atYourService = findViewById(R.id.service_button);
-        atYourService.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
+        Button parkSearchButton = findViewById(R.id.park_search_button);
+        parkSearchButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ParkSearchActivity.class);
             startActivity(intent);
         });
     }
