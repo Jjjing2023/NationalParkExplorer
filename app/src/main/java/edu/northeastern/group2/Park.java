@@ -10,6 +10,7 @@ public class Park implements Parcelable {
     private String longitude;
     private String weatherIconCode;
     private String temperature;
+    private boolean isLoading;
 
     public Park(String name, String description, String latitude, String longitude){
         this.name = name;
@@ -19,6 +20,7 @@ public class Park implements Parcelable {
         this.longitude = longitude;
         this.weatherIconCode = "";
         this.temperature = "";
+        this.isLoading = true;
     }
 
     protected Park(Parcel in) {
@@ -28,6 +30,7 @@ public class Park implements Parcelable {
         longitude = in.readString();
         weatherIconCode = in.readString();
         temperature = in.readString();
+        isLoading = in.readByte() != 0;
     }
 
     public static final Creator<Park> CREATOR = new Creator<Park>() {
@@ -55,6 +58,7 @@ public class Park implements Parcelable {
         parcel.writeString(longitude);
         parcel.writeString(weatherIconCode);
         parcel.writeString(temperature);
+        parcel.writeByte((byte) (isLoading ? 1 : 0));
     }
 
     public String getName(){ return name; }
@@ -63,9 +67,15 @@ public class Park implements Parcelable {
     public String getLongitude(){ return longitude; }
     public String getWeatherIconCode() { return weatherIconCode; }
     public String getTemperature() { return temperature; }
+    public boolean isLoading() { return isLoading; }
     
     public void setWeatherInfo(String iconCode, String temp) {
         this.weatherIconCode = iconCode;
         this.temperature = temp;
+        this.isLoading = false;
+    }
+
+    public void setLoading(boolean loading) {
+        this.isLoading = loading;
     }
 }
