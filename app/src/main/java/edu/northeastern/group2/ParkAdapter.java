@@ -58,7 +58,7 @@ public class ParkAdapter extends RecyclerView.Adapter<ParkAdapter.ParkViewHolder
         // Add number prefix to the name
         holder.nameText.setText(number + ". " + park.getName());
         holder.descriptionText.setText(park.getDescription());
-        holder.coordinatesText.setText("Location coordinates: " + park.getLatitude() + ", " + park.getLongitude());
+        holder.coordinatesText.setText("Location coordinate: " + park.getLatitude() + ", " + park.getLongitude());
         
         // Set weather information
         if (park.isLoading()) {
