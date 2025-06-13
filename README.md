@@ -45,23 +45,32 @@ A comprehensive Android application that allows users to explore national parks 
 ## Group Members and Contributions
 
 ### Team Members
-1. Chris Chen (GitHub: [chrischenlixing])
+1. Chris Chen (GitHub: chrischenlixing)
     - Implemented weather API integration
     - Created weather icon mapping system
-    - Developed loading animations
+    - UI Improvements like loading animations and keyboard improvements
     - Validation of the state code
-    - Brought keyboard when parks found
 
-2. Shuyue Zhang (GitHub: [Shuyue6481])
+2. Shuyue Zhang (GitHub: Shuyue6481)
     - Design UI for park search screen (new Activity)
     - Include an EditText for inputting the state code (e.g., CA, UT)
     - Add a search button to trigger API calls
     - Use ConstraintLayout for responsive design in both orientations
 
-3. Qi Zheng (GitHub: [zqiq536])
-    -Create project and app icon
-    -Setup MainActivity with group name
-    -Add [At Your Service] button to bring up ServiceActivity
+3. Qi Zheng (GitHub: zqiq536)
+    - Create project and app icon
+    - Setup MainActivity with group name
+    - Add [At Your Service] button to bring up ServiceActivity
+
+
+4. Tianjing Liu (GitHub: Jjjing2023)
+    - Designed data model Park 
+    - Established National Park Service API connection
+    - Implemented API key protection by externalizing secrets to local.properties
+
+5. Mingda Xie (GitHub: M1ngdaXie)
+    - Added RecyclerView to display park data
+    - Implemented Parcelable for Park to retain data after screen rotation
 
 ## Technical Requirements
 - Android Studio Arctic Fox or later
@@ -72,6 +81,10 @@ A comprehensive Android application that allows users to explore national parks 
 ## Setup Instructions
 1. Clone the repository
 2. Open the project in Android Studio
+3. Get API key for
+   - [National Park Service](https://www.nps.gov/subjects/developer/get-started.htm)  
+   - [Weather API](https://www.weatherapi.com)
+
 3. Add your API keys in `local.properties`:
    ```
    npsApiKey=your_nps_api_key
