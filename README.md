@@ -48,7 +48,7 @@ A comprehensive Android application that allows users to explore national parks 
 1. Chris Chen (GitHub: chrischenlixing)
     - Implemented weather API integration
     - Created weather icon mapping system
-    - UI Improvements like loading animations and keyboard improvements
+    - UI Improvements (e.g., loading animations and keyboard)
     - Validation of the state code
 
 2. Shuyue Zhang (GitHub: Shuyue6481)
@@ -70,7 +70,7 @@ A comprehensive Android application that allows users to explore national parks 
 
 5. Mingda Xie (GitHub: M1ngdaXie)
     - Added RecyclerView to display park data
-    - Implemented Parcelable for Park to retain data after screen rotation
+    - Implemented Parcelable for Park to retain data after screen rotation
 
 ## Technical Requirements
 - Android Studio Arctic Fox or later
