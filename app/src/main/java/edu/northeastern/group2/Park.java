@@ -8,6 +8,8 @@ public class Park implements Parcelable {
     private String description;
     private String latitude;
     private String longitude;
+    private String weatherIconCode;
+    private String temperature;
 
     public Park(String name, String description, String latitude, String longitude){
         this.name = name;
@@ -15,6 +17,8 @@ public class Park implements Parcelable {
         // latitude and longitude will be used to call weather api and retrieve weather icon later
         this.latitude = latitude;
         this.longitude = longitude;
+        this.weatherIconCode = "";
+        this.temperature = "";
     }
 
     protected Park(Parcel in) {
@@ -22,6 +26,8 @@ public class Park implements Parcelable {
         description = in.readString();
         latitude = in.readString();
         longitude = in.readString();
+        weatherIconCode = in.readString();
+        temperature = in.readString();
     }
 
     public static final Creator<Park> CREATOR = new Creator<Park>() {
@@ -47,10 +53,19 @@ public class Park implements Parcelable {
         parcel.writeString(description);
         parcel.writeString(latitude);
         parcel.writeString(longitude);
+        parcel.writeString(weatherIconCode);
+        parcel.writeString(temperature);
     }
 
     public String getName(){ return name; }
     public String getDescription(){ return description; }
     public String getLatitude(){ return latitude; }
     public String getLongitude(){ return longitude; }
+    public String getWeatherIconCode() { return weatherIconCode; }
+    public String getTemperature() { return temperature; }
+    
+    public void setWeatherInfo(String iconCode, String temp) {
+        this.weatherIconCode = iconCode;
+        this.temperature = temp;
+    }
 }

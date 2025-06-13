@@ -15,6 +15,16 @@
         android:textSize="16sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/weather_info"
+        android:layout_marginEnd="8dp" />
+
+    <TextView
+        android:id="@+id/weather_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🌤️ 72°F"
+        android:textSize="14sp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView

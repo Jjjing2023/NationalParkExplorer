@@ -1,4 +1,5 @@
 import java.util.Properties
+import org.gradle.api.GradleException
 
 
 plugins {
@@ -26,11 +27,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         val npsKey: String = localProps.getProperty("npsApiKey") ?: ""
+        val weatherKey: String = localProps.getProperty("weatherApiKey")
+            ?: throw GradleException("weatherApiKey not found in local.properties")
 
         buildConfigField(
             "String",
             "NPS_API_KEY",
             "\"$npsKey\""
+        )
+        
+        buildConfigField(
+            "String",
+            "WEATHER_API_KEY",
+            "\"$weatherKey\""
         )
 
     }

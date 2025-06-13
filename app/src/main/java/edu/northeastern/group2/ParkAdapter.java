@@ -40,6 +40,12 @@ public class ParkAdapter extends RecyclerView.Adapter<ParkAdapter.ParkViewHolder
         holder.nameText.setText(number + ". " + park.getName());
         holder.descriptionText.setText(park.getDescription());
         holder.coordinatesText.setText(park.getLatitude() + ", " + park.getLongitude());
+        
+        // Set weather information
+        String weatherText = park.getWeatherIconCode().isEmpty() ? 
+            "Loading..." : 
+            park.getWeatherIconCode() + " " + park.getTemperature() + "°F";
+        holder.weatherText.setText(weatherText);
     }
 
     @Override
@@ -48,13 +54,14 @@ public class ParkAdapter extends RecyclerView.Adapter<ParkAdapter.ParkViewHolder
     }
 
     static class ParkViewHolder extends RecyclerView.ViewHolder {
-        TextView nameText, descriptionText, coordinatesText;
+        TextView nameText, descriptionText, coordinatesText, weatherText;
 
         public ParkViewHolder(@NonNull View itemView) {
             super(itemView);
             nameText = itemView.findViewById(R.id.park_name);
             descriptionText = itemView.findViewById(R.id.park_description);
             coordinatesText = itemView.findViewById(R.id.park_coordinates);
+            weatherText = itemView.findViewById(R.id.weather_info);
         }
     }
 }
