@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.view.inputmethod.InputMethodManager;
 
@@ -39,6 +40,7 @@ public class ParkSearchActivity extends AppCompatActivity {
     private static final String TAG = "ParkSearchActivity";
     private ParkAdapter parkAdapter;
     private RecyclerView parkRecyclerView;
+    private ProgressBar loadingSpinner;
     private List<Park> parkList = new ArrayList<>();
     private ExecutorService executorService;
     private static final String PARK_LIST_KEY = "PARK_LIST";
@@ -84,6 +86,8 @@ public class ParkSearchActivity extends AppCompatActivity {
 
             EditText stateCodeInput = findViewById(R.id.state_code_input);
             Button searchButton = findViewById(R.id.search_button);
+            loadingSpinner = findViewById(R.id.loading_spinner);
+
             searchButton.setOnClickListener(v -> {
                 String stateCode = stateCodeInput.getText().toString().trim().toUpperCase();
                 Log.d(TAG, "Search button clicked for state code: " + stateCode);
@@ -120,6 +124,7 @@ public class ParkSearchActivity extends AppCompatActivity {
     }
 
     private void startLoadingAnimation(String stateCode) {
+        loadingSpinner.setVisibility(View.VISIBLE);
         Snackbar snackbar = Snackbar.make(findViewById(R.id.park_search_layout), "", Snackbar.LENGTH_INDEFINITE);
         View snackbarView = snackbar.getView();
         TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
@@ -139,6 +144,7 @@ public class ParkSearchActivity extends AppCompatActivity {
     }
 
     private void stopLoadingAnimation() {
+        loadingSpinner.setVisibility(View.GONE);
         if (loadingRunnable != null) {
             handler.removeCallbacks(loadingRunnable);
         }
