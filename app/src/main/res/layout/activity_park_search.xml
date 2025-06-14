@@ -38,7 +38,7 @@
             android:id="@+id/state_code_input"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:hint="Enter State Code "
+            android:hint="Enter State Code (e.g. CA)"
             android:inputType="text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
