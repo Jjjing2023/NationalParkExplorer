@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,11 +15,15 @@
         android:theme="@style/Theme.Group2"
         tools:targetApi="31">
         <activity
+            android:name=".Afterlogin"
+            android:exported="false" />
+        <activity
             android:name=".ParkSearchActivity"
             android:exported="false" />
         <activity
-            android:name=".ServiceActivity"
+            android:name=".LoginActivity"
             android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
