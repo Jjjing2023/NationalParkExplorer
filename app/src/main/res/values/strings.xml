@@ -9,5 +9,6 @@
     <string name="send_sticker">Send Sticker</string>
     <string name="err_no_recipient">Please pick a recipient</string>
     <string name="err_no_sticker">Please tap a sticker</string>
+    <string name="sticker">Sticker</string>
 
 </resources>
