@@ -4,4 +4,10 @@
     <string name="group_name">Group 2</string>
 
     <string name="at_your_service">At Your Service</string>
+
+    <string name="select_recipient">Select recipient…</string>
+    <string name="send_sticker">Send Sticker</string>
+    <string name="err_no_recipient">Please pick a recipient</string>
+    <string name="err_no_sticker">Please tap a sticker</string>
+
 </resources>
