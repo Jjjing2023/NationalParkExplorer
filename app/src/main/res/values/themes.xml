@@ -1,9 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.Group2" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <item name="android:spinnerStyle">@style/MySpinnerStyle</item>
+        <item name="spinnerStyle">@style/MySpinnerStyle</item>
     </style>
 
     <style name="Theme.Group2" parent="Base.Theme.Group2" />
+
+    <style name="MySpinnerStyle" parent="Widget.AppCompat.Spinner.Underlined">
+
+        <item name="android:background">@drawable/spinner_background</item>
+    </style>
+
 </resources>
+
