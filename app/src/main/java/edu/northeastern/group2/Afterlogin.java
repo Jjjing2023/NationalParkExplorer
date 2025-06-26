@@ -49,6 +49,11 @@ public class Afterlogin extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("StickerAppPrefs", MODE_PRIVATE);
         currentUser = prefs.getString("currentUser", "Guest");
+        if (currentUser == null || "Guest".equals(currentUser.trim())) {
+            Toast.makeText(this, "No valid username found. Please login again.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         TextView header = findViewById(R.id.screenText);
         header.setText(SCREEN_NAME + " - Welcome " + currentUser);
