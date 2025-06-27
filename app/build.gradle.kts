@@ -5,6 +5,7 @@ import org.gradle.api.GradleException
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
+
 }
 
 val localProps = Properties()
@@ -75,4 +76,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
+    // Add the dependency for the Firebase SDK for Google Analytics
+    implementation("com.google.firebase:firebase-analytics")
 }
