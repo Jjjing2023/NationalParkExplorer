@@ -1,6 +1,8 @@
 package edu.northeastern.group2;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -52,8 +54,15 @@ public class StickerHistoryActivity extends AppCompatActivity {
         historyRecyclerView.setAdapter(adapter);
 
         receivedRef = FirebaseDatabase.getInstance()
-                .getReference(currentUser)
+                .getReference("users")
+                .child(currentUser)
                 .child("received");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1001);
+            }
+        }
 
         listenForReceivedStickers();
 
@@ -69,12 +78,17 @@ public class StickerHistoryActivity extends AppCompatActivity {
         receivedRef.orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("DEBUG", "Children count = " + snapshot.getChildrenCount());
                 receivedStickers.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
+
                     StickerMessage msg = ds.getValue(StickerMessage.class);
                     if (msg != null) {
+                        Log.d("DEBUG", "Parsed: " + msg.getSender() + " → " + msg.getStickerId());
                         receivedStickers.add(msg);
                         StickerNotificationHelper.sendNotification(StickerHistoryActivity.this, msg);
+                    }else{
+                        Log.e("DEBUG", "Failed to parse msg from snapshot: " + ds.toString());
                     }
                 }
                 // 倒序排列：最新的贴纸在上方
