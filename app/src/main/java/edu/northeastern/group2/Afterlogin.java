@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -35,7 +36,8 @@ import java.util.List;
 public class Afterlogin extends AppCompatActivity {
     private String currentUser;
     private DatabaseReference usersRef;
-    private Spinner spinnerRecipient;
+//    private Spinner spinnerRecipient;
+private AutoCompleteTextView dropdownRecipient;
     private RecyclerView rvStickers;
     private StickerAdapter stickerAdapter;
     private StickerItem selectedSticker;
@@ -77,7 +79,8 @@ public class Afterlogin extends AppCompatActivity {
         usersRef = FirebaseDatabase.getInstance()
                 .getReference("users");
 
-        spinnerRecipient = findViewById(R.id.spinner_recipient);
+//        spinnerRecipient = findViewById(R.id.spinner_recipient);
+        dropdownRecipient = findViewById(R.id.dropdown_recipient);
         loadRecipients();
 
         rvStickers = findViewById(R.id.rv_stickers);
@@ -97,42 +100,77 @@ public class Afterlogin extends AppCompatActivity {
             startActivity(intent);
         });
 
+
         DatabaseReference receivedRef = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child(currentUser)
                 .child("received");
 
-        receivedRef.addChildEventListener(new ChildEventListener() {
+        SharedPreferences localPrefs = getSharedPreferences("StickerAppPrefs", MODE_PRIVATE);
+        long lastSeen = localPrefs.getLong("lastSeenTimestamp", 0);
+        final long[] maxSeenTimestamp = {lastSeen};
 
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                StickerMessage msg = snapshot.getValue(StickerMessage.class);
+        receivedRef.orderByChild("timestamp").startAt(lastSeen + 1)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        StickerMessage msg = snapshot.getValue(StickerMessage.class);
+                        if (msg != null) {
+                            Log.d("Afterlogin", "New sticker received: " + msg.getStickerId());
+                            StickerNotificationHelper.sendNotification(Afterlogin.this, msg);
+                            maxSeenTimestamp[0] = Math.max(maxSeenTimestamp[0], msg.timestamp);
+                        }
+                    }
 
-                SharedPreferences localPrefs = getSharedPreferences("StickerAppPrefs", MODE_PRIVATE);
-                long lastSeen = localPrefs.getLong("lastSeenTimestamp", 0);
+                    @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+                    @Override public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
+                    @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+                    @Override public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Afterlogin", "Notification listener error: " + error.getMessage());
+                    }
+                });
 
-                if (msg != null && msg.timestamp > lastSeen) {
-                    Log.d("Afterlogin", "New sticker received: " + msg.getStickerId());
+        new android.os.Handler().postDelayed(() -> {
+            localPrefs.edit().putLong("lastSeenTimestamp", maxSeenTimestamp[0]).apply();
+        }, 2000);
 
-                    StickerNotificationHelper.sendNotification(Afterlogin.this, msg);
-                    localPrefs.edit().putLong("lastSeenTimestamp", msg.timestamp).apply();
-                }
-            }
-
-            @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
-            @Override public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
-            @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
-            @Override public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Afterlogin", "Notification listener error: " + error.getMessage());
-            }
-        });
 
     }
+
+//    private void loadRecipients() {
+//        usersRef.get().addOnCompleteListener(task -> {
+//            List<String> names = new ArrayList<>();
+//            names.add(getString(R.string.select_recipient));
+//
+//            if (task.isSuccessful() && task.getResult().exists()) {
+//                for (DataSnapshot snap : task.getResult().getChildren()) {
+//                    String name = snap.getKey();
+//                    if (name != null && !name.equals(currentUser)) {
+//                        names.add(name);
+//                    }
+//                }
+//            }
+//            if (names.size() == 1) {
+//                names.add("No friends");
+//            }
+//
+//            Log.d("Afterlogin", "Loaded recipients: " + names);
+//
+//            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+//                    this,
+//                    R.layout.spinner_hint_item,
+//                    names);
+//            adapter.setDropDownViewResource(
+//                    android.R.layout.simple_spinner_dropdown_item);
+//            spinnerRecipient.setAdapter(adapter);
+//            spinnerRecipient.setSelection(0);
+//
+//        });
+//    }
 
     private void loadRecipients() {
         usersRef.get().addOnCompleteListener(task -> {
             List<String> names = new ArrayList<>();
-            names.add(getString(R.string.select_recipient));
 
             if (task.isSuccessful() && task.getResult().exists()) {
                 for (DataSnapshot snap : task.getResult().getChildren()) {
@@ -142,23 +180,20 @@ public class Afterlogin extends AppCompatActivity {
                     }
                 }
             }
-            if (names.size() == 1) {
+
+            if (names.isEmpty()) {
                 names.add("No friends");
             }
 
-            Log.d("Afterlogin", "Loaded recipients: " + names);
-
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
                     this,
-                    R.layout.spinner_hint_item,
-                    names);
-            adapter.setDropDownViewResource(
-                    android.R.layout.simple_spinner_dropdown_item);
-            spinnerRecipient.setAdapter(adapter);
-            spinnerRecipient.setSelection(0);
-
+                    android.R.layout.simple_dropdown_item_1line,
+                    names
+            );
+            dropdownRecipient.setAdapter(adapter);
         });
     }
+
 
     private List<StickerItem> getPredefinedStickers() {
         List<StickerItem> list = new ArrayList<>();
@@ -174,12 +209,18 @@ public class Afterlogin extends AppCompatActivity {
     }
 
     private void sendSticker() {
-        int pos = spinnerRecipient.getSelectedItemPosition();
-        if (pos == 0) {
+//        int pos = spinnerRecipient.getSelectedItemPosition();
+//        if (pos == 0) {
+//            Toast.makeText(this, R.string.err_no_recipient, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        String receiver = (String) spinnerRecipient.getSelectedItem();
+
+        String receiver = dropdownRecipient.getText().toString().trim();
+        if (receiver.isEmpty() || receiver.equals("No friends")) {
             Toast.makeText(this, R.string.err_no_recipient, Toast.LENGTH_SHORT).show();
             return;
         }
-        String receiver = (String) spinnerRecipient.getSelectedItem();
 
         if (selectedSticker == null) {
             Toast.makeText(this, R.string.err_no_sticker, Toast.LENGTH_SHORT).show();
@@ -212,6 +253,7 @@ public class Afterlogin extends AppCompatActivity {
 
         selectedSticker = null;
         stickerAdapter.notifyDataSetChanged();
-        spinnerRecipient.setSelection(0);
+//        spinnerRecipient.setSelection(0);
+        dropdownRecipient.setText("", false);
     }
 }
