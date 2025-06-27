@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class StickerHistoryActivity extends AppCompatActivity {
+public class StickerReceivedActivity extends AppCompatActivity {
 
-    private RecyclerView historyRecyclerView;
-    private StickerHistoryAdapter adapter;
+    private RecyclerView receivedRecyclerView;
+    private StickerReceivedAdapter adapter;
     private List<StickerMessage> receivedStickers;
     private String currentUser;
     private DatabaseReference receivedRef;
@@ -37,7 +37,7 @@ public class StickerHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_sticker_history);
+        setContentView(R.layout.activity_sticker_received);
 
         SharedPreferences prefs = getSharedPreferences("StickerAppPrefs", MODE_PRIVATE);
         currentUser = prefs.getString("currentUser", "Guest");
@@ -47,11 +47,11 @@ public class StickerHistoryActivity extends AppCompatActivity {
             return;
         }
 
-        historyRecyclerView = findViewById(R.id.rv_received_history);
-        historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        receivedRecyclerView = findViewById(R.id.rv_received_history);
+        receivedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         receivedStickers = new ArrayList<>();
-        adapter = new StickerHistoryAdapter(this, receivedStickers);
-        historyRecyclerView.setAdapter(adapter);
+        adapter = new StickerReceivedAdapter(this, receivedStickers);
+        receivedRecyclerView.setAdapter(adapter);
 
         receivedRef = FirebaseDatabase.getInstance()
                 .getReference("users")
@@ -91,7 +91,7 @@ public class StickerHistoryActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("StickerHistory", "Database error: " + error.getMessage());
+                Log.e("StickerReceived", "Database error: " + error.getMessage());
             }
         });
     }

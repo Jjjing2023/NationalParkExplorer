@@ -15,25 +15,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class StickerHistoryAdapter extends RecyclerView.Adapter<StickerHistoryAdapter.ViewHolder> {
+public class StickerReceivedAdapter extends RecyclerView.Adapter<StickerReceivedAdapter.ViewHolder> {
 
     private final Context context;
     private final List<StickerMessage> stickers;
 
-    public StickerHistoryAdapter(Context context, List<StickerMessage> stickers) {
+    public StickerReceivedAdapter(Context context, List<StickerMessage> stickers) {
         this.context = context;
         this.stickers = stickers;
     }
 
     @NonNull
     @Override
-    public StickerHistoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public StickerReceivedAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_received_sticker, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StickerHistoryAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull StickerReceivedAdapter.ViewHolder holder, int position) {
         StickerMessage msg = stickers.get(position);
 
         holder.senderText.setText("From: " + msg.getSender());

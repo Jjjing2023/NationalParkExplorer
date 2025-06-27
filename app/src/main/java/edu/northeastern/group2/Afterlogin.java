@@ -94,9 +94,15 @@ private AutoCompleteTextView dropdownRecipient;
         Button btnSend = findViewById(R.id.btn_send);
         btnSend.setOnClickListener(v -> sendSticker());
 
-        Button btnHistory = findViewById(R.id.btn_view_history);
-        btnHistory.setOnClickListener(v -> {
-            Intent intent = new Intent(Afterlogin.this, StickerHistoryActivity.class);
+        Button btnSentHistory = findViewById(R.id.btn_sent_history);
+        btnSentHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(Afterlogin.this, StickerSentActivity.class);
+            startActivity(intent);
+        });
+
+        Button btnReceiveHistory = findViewById(R.id.btn_receive_history);
+        btnReceiveHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(Afterlogin.this, StickerReceivedActivity.class);
             startActivity(intent);
         });
 

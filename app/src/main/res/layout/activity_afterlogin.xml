@@ -26,8 +26,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/screenText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_send"
+        app:layout_constraintHorizontal_chainStyle="spread"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="12dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
         <AutoCompleteTextView
@@ -38,14 +40,20 @@
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/send_sticker"
+        app:layout_constraintBottom_toBottomOf="@id/recipient_dropdown_layout"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_stickers"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/recipient_dropdown_layout"
-        app:layout_constraintBottom_toTopOf="@id/btn_send"
+        app:layout_constraintBottom_toTopOf="@id/btn_sent_history"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:spanCount="3"
@@ -57,23 +65,26 @@
         android:paddingBottom="8dp" />
 
     <Button
-        android:id="@+id/btn_send"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_sent_history"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/send_sticker"
-        app:layout_constraintBottom_toTopOf="@id/btn_view_history"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="12dp"/>
-
-    <Button
-        android:id="@+id/btn_view_history"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Sticker Receive History"
+        android:text="Sent History"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_receive_history"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"/>
+
+    <Button
+        android:id="@+id/btn_receive_history"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Receive History"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_sent_history"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

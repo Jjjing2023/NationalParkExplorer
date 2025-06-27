@@ -42,11 +42,20 @@ public class StickerAdapter
         holder.iv.setAlpha(pos == selectedPosition ? 1f : 0.5f);
 
         holder.iv.setOnClickListener(v -> {
-            int old = selectedPosition;
-            selectedPosition = holder.getAdapterPosition();
-            notifyItemChanged(old);
-            notifyItemChanged(selectedPosition);
-            listener.onStickerClick(item);
+            int clickedPosition = holder.getAdapterPosition();
+            
+            if (clickedPosition == selectedPosition) {
+                int old = selectedPosition;
+                selectedPosition = RecyclerView.NO_POSITION;
+                notifyItemChanged(old);
+                listener.onStickerClick(null);
+            } else {
+                int old = selectedPosition;
+                selectedPosition = clickedPosition;
+                notifyItemChanged(old);
+                notifyItemChanged(selectedPosition);
+                listener.onStickerClick(item);
+            }
         });
     }
 
