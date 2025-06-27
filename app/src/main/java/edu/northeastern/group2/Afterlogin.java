@@ -1,5 +1,6 @@
 package edu.northeastern.group2;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,6 +75,12 @@ public class Afterlogin extends AppCompatActivity {
 
         Button btnSend = findViewById(R.id.btn_send);
         btnSend.setOnClickListener(v -> sendSticker());
+
+        Button btnHistory = findViewById(R.id.btn_view_history);
+        btnHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(Afterlogin.this, StickerHistoryActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void loadRecipients() {
