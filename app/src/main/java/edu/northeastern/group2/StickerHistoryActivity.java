@@ -58,12 +58,6 @@ public class StickerHistoryActivity extends AppCompatActivity {
                 .child(currentUser)
                 .child("received");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1001);
-            }
-        }
-
         listenForReceivedStickers();
 
 
@@ -86,12 +80,11 @@ public class StickerHistoryActivity extends AppCompatActivity {
                     if (msg != null) {
                         Log.d("DEBUG", "Parsed: " + msg.getSender() + " → " + msg.getStickerId());
                         receivedStickers.add(msg);
-                        StickerNotificationHelper.sendNotification(StickerHistoryActivity.this, msg);
+                        //StickerNotificationHelper.sendNotification(StickerHistoryActivity.this, msg);
                     }else{
                         Log.e("DEBUG", "Failed to parse msg from snapshot: " + ds.toString());
                     }
                 }
-                // 倒序排列：最新的贴纸在上方
                 Collections.reverse(receivedStickers);
                 adapter.notifyDataSetChanged();
             }

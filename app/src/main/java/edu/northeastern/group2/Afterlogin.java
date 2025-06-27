@@ -2,6 +2,8 @@ package edu.northeastern.group2;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,9 +21,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +45,14 @@ public class Afterlogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_afterlogin);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1001);
+            }
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(
                 findViewById(R.id.afterlogin_root),
@@ -81,6 +96,37 @@ public class Afterlogin extends AppCompatActivity {
             Intent intent = new Intent(Afterlogin.this, StickerHistoryActivity.class);
             startActivity(intent);
         });
+
+        DatabaseReference receivedRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(currentUser)
+                .child("received");
+
+        receivedRef.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                StickerMessage msg = snapshot.getValue(StickerMessage.class);
+
+                SharedPreferences localPrefs = getSharedPreferences("StickerAppPrefs", MODE_PRIVATE);
+                long lastSeen = localPrefs.getLong("lastSeenTimestamp", 0);
+
+                if (msg != null && msg.timestamp > lastSeen) {
+                    Log.d("Afterlogin", "New sticker received: " + msg.getStickerId());
+
+                    StickerNotificationHelper.sendNotification(Afterlogin.this, msg);
+                    localPrefs.edit().putLong("lastSeenTimestamp", msg.timestamp).apply();
+                }
+            }
+
+            @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+            @Override public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
+            @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+            @Override public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Afterlogin", "Notification listener error: " + error.getMessage());
+            }
+        });
+
     }
 
     private void loadRecipients() {
